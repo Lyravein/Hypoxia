@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1942993327542932236}
   - component: {fileID: 4250810173306156225}
   - component: {fileID: 7349182749102837411}
+  - component: {fileID: 3800245731056554406}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -221,4 +222,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 468dc6580df0da48480b7cd618348d61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hypoxia.PlayerExposure
+  ShowTopMostFoldoutHeaderGroup: 1
   rateMultiplier: 1
+  Exposure:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  OxygenTanks:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 3
+  IsPassedOut:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  IsSprinting:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  IsMoving:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  IsFlashlightOn:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 1
+--- !u!114 &3800245731056554406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8020091266334648574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 791e59663dab070d9b5dc0d22f4c18c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hypoxia.PlayerInteractor
+  reach: 3.5

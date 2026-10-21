@@ -43,10 +43,9 @@ Port default: **7777/UDP**, listen di semua adapter LAN.
 | Berlari | `Shift` (tahan) |
 | Memakai tabung oksigen | `Q` |
 | Senter | `F` |
+| Interaksi / periksa objek | `E` |
 | Debug band CO (build demo saja) | `F1` `F2` `F3` |
 | Buka/tutup kunci kursor | `Esc` |
-
-`E` (interaksi) belum aktif — masuk Sprint 2 bersama story B2.
 
 ## Mekanik Paparan CO
 
@@ -81,9 +80,11 @@ dan **75%**, supaya kepanikan terasa organik.
 Assets/
 ├── Prefabs/Player.prefab          Player prefab jaringan (NetworkObject + NetworkTransform)
 ├── Scenes/SampleScene.unity       Scene gameplay; root Hypoxia_Network + Hypoxia_Greybox
+├── Editor/Sprint2Builder.cs       Menu Hypoxia > Build Sprint 2 Level (authoring greybox)
 ├── Scripts/
 │   ├── Exposure/                  ExposureCalculator, PlayerExposure, ExposureZone, tes
-│   ├── UI/HypoxiaHUD.cs           HUD IMGUI: menu LAN, bilah paparan, game over
+│   ├── Illusion/                  IllusionEntity (B1/B2), GateController, PlayerInteractor, tes
+│   ├── UI/HypoxiaHUD.cs           HUD IMGUI: menu LAN, bilah paparan, prompt interaksi, game over
 │   └── OwnerPlayerMovement.cs     Gerak owner-authoritative
 └── DefaultNetworkPrefabs.asset    Daftar prefab jaringan
 
@@ -98,7 +99,7 @@ Semua objek dunia memakai primitif greybox. Aset final masuk pada Sprint 5 (stor
 | Sprint | Milestone | Story | Poin | Status |
 |---|---|---|---|---|
 | 1 | — | A1, A2, A3, A4, D1 | 22 | ✅ Selesai |
-| 2 | Alpha | G1, B1, B2, E3 | 23 | Berikutnya |
+| 2 | Alpha | G1, B1, B2, E3 | 23 | ✅ Selesai |
 | 3 | — | C1, C2, E4, E5, E6 | 23 | — |
 | 4 | Beta | C3, E1, E2, E7 | 24 | — |
 | 5 | — | F1, F2, G2 | 15 | — |
@@ -113,6 +114,16 @@ gerbang sekat (G1), objek yang sama tampil berbeda di dua layar mengikuti band C
 interaksi dikirim ke host dan diverifikasi di objek asli (B2), occlusion culling pada dinding
 statis (E3).
 
+| Story | Bukti |
+|---|---|
+| G1 | `Hypoxia_Greybox/Sprint2_Level`: Dermaga (0 m) → Laboratorium (8–30 m) → gerbang → Poros (30–60 m) → Stasiun (60–72 m), tersambung berurutan |
+| B1 | Tiga `Illusion_Entity` menukar `Form_Normal`/`Form_Distorted`/`Form_Hallucinating` mengikuti band pemain lokal; collider tetap `1.2 × 2 × 1.2` di ketiga band |
+| B2 | `RequestInteractRpc` ke host; memilih objek salah tidak membuka gerbang, objek benar membuka `Gate_Sector2` |
+| E3 | 45 dari 49 transform bertanda Static + ter-bake; kamera di stasiun: 60 draw call / 2.903 tris dengan occlusion, 66 / 3.351 tanpanya |
+
+Jalankan ulang authoring level kapan saja lewat menu **Hypoxia > Build Sprint 2 Level**; objek
+`Sprint2_Level` lama dihapus lebih dulu sehingga build ulang tidak menggandakan geometri.
+
 ## Tes
 
 `Assets/Scripts/Exposure/ExposureCalculatorTests.cs` berisi pemeriksaan berbasis `Debug.Assert`
@@ -126,6 +137,7 @@ Console. Tidak memakai framework tes tambahan.
 | HDRP | URP 17.6.0 | Sudah menjadi pipeline proyek. Efek Volume per band (E1) dan ray tracing refleksi (F1) akan diadaptasi ke URP. |
 | DirectX 12 | Dikembangkan di Linux | Klausa DX12 pada kriteria D1 tidak berlaku; sinkronisasi LAN tetap diverifikasi. |
 | Voice chat in-game | Discord | D2 berstatus opsional dan dipotong sesuai strategi *Buffer & Scope Pruning* GDD Bab 18. |
+| Occlusion Culling lewat toggle Quality | Hanya bake + `Camera.useOcclusionCulling` | Unity 6 tidak lagi menyimpan toggle occlusion per level kualitas. |
 
 ## Aturan Desain yang Tidak Boleh Dilanggar
 

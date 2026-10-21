@@ -79,6 +79,7 @@ namespace Hypoxia
             {
                 DrawExposureBar(player);
                 DrawOxygenInventory(player);
+                DrawInteractionPrompt(player);
             }
 
             if (PlayerExposure.IsAnyPlayerPassedOut())
@@ -182,6 +183,14 @@ namespace Hypoxia
             string flashlightStr = player.IsFlashlightOn.Value ? "ON" : "OFF";
             GUI.Label(new Rect(20, 56, 350, 25), $"{tankStr}  |  [Q] O2  |  [F] Senter: {flashlightStr}");
             GUI.Label(new Rect(20, 78, 300, 20), "Debug Demo: [F1] 0%  [F2] 50%  [F3] 75%");
+        }
+
+        private void DrawInteractionPrompt(PlayerExposure player)
+        {
+            if (!player.TryGetComponent(out PlayerInteractor interactor) || interactor.Hovered == null) return;
+
+            string label = interactor.Hovered.IsSolved.Value ? "[E] Sudah dibuka" : "[E] Periksa";
+            GUI.Label(new Rect(Screen.width * 0.5f - 100f, Screen.height * 0.55f, 200f, 25f), label);
         }
 
         private void DrawGameOverScreen(PlayerExposure player)
