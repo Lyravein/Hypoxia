@@ -126,8 +126,9 @@ Jalankan ulang authoring level kapan saja lewat menu **Hypoxia > Build Sprint 2 
 
 ## Tes
 
-`Assets/Scripts/Exposure/ExposureCalculatorTests.cs` berisi pemeriksaan berbasis `Debug.Assert`
-yang dijalankan otomatis saat Editor dimuat (`[InitializeOnLoadMethod]`). Kegagalan tampil di
+`Assets/Scripts/Exposure/ExposureCalculatorTests.cs` dan
+`Assets/Scripts/Illusion/IllusionFormTests.cs` berisi pemeriksaan berbasis `Debug.Assert` yang
+dijalankan otomatis saat Editor dimuat (`[InitializeOnLoadMethod]`). Kegagalan tampil di
 Console. Tidak memakai framework tes tambahan.
 
 ## Deviasi dari GDD
