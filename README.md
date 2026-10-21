@@ -34,6 +34,23 @@ atau jalankan instance kedua dari sebuah build.
 
 Port default: **7777/UDP**, listen di semua adapter LAN.
 
+### Syarat jaringan
+
+Kedua pemain harus berada di **satu jaringan lokal** — WiFi yang sama **atau** kabel ke router
+yang sama; tidak wajib WiFi. Host listen di `0.0.0.0:7777`, jadi WiFi maupun Ethernet diterima.
+Ambil IP host dengan `hostname -I` (Linux) atau `ipconfig` (Windows).
+
+| Skenario | Bisa |
+|---|---|
+| Dua laptop, WiFi sama | ✅ |
+| Satu WiFi, satu kabel di router sama | ✅ |
+| HP hotspot | ✅ |
+| WiFi kampus/kantor dengan *client isolation* | ❌ UDP antar-klien diblokir |
+| Beda jaringan (rumah lain) | ❌ butuh port forward atau VPN overlay |
+
+Diagnosa cepat: `ping <IP host>` dari laptop kedua harus balas. Kalau ping tembus tapi join
+gagal, firewall host memblokir UDP 7777 (`sudo ufw allow 7777/udp`).
+
 ## Kontrol
 
 | Aksi | Input |
