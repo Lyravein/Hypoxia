@@ -61,6 +61,7 @@ gagal, firewall host memblokir UDP 7777 (`sudo ufw allow 7777/udp`).
 | Memakai tabung oksigen | `Q` |
 | Senter | `F` |
 | Interaksi / periksa objek | `E` |
+| Bagan Kimia (Maya / Klien) | `C` |
 | Debug band CO (build demo saja) | `F1` `F2` `F3` |
 | Buka/tutup Panel Modul 2 & 5 | `F4` |
 | Buka/tutup kunci kursor | `Esc` |
@@ -101,10 +102,11 @@ Assets/
 ├── Editor/Sprint2Builder.cs       Menu Hypoxia > Build Sprint 2 Level (authoring greybox)
 ├── Scripts/
 │   ├── Exposure/                  ExposureCalculator, PlayerExposure, ExposureZone, tes
-│   ├── Illusion/                  IllusionEntity (B1/B2), GateController, PlayerInteractor, tes
+│   ├── Illusion/                  IllusionEntity (B1/B2), GateController, PlayerInteractor, IInteractable, tes
 │   ├── Procedural/                ProceduralTerrain (E4), LSystemGenerator (E5), tes
 │   ├── Simulation/                WaveGenerator (E6), PerlinLightFlicker (E6), SimplexVaporMotion (E6)
-│   ├── UI/HypoxiaHUD.cs           HUD IMGUI: menu LAN, bilah paparan, prompt interaksi, panel debug F4
+│   ├── Puzzles/                   ArchiveSafe (C1), ArchiveGlyphWall (C1), tes
+│   ├── UI/HypoxiaHUD.cs           HUD IMGUI: menu LAN, bilah paparan, prompt interaksi, bagan unsur, panel debug F4
 │   └── OwnerPlayerMovement.cs     Gerak owner-authoritative + camera sway Perlin
 └── DefaultNetworkPrefabs.asset    Daftar prefab jaringan
 
@@ -120,7 +122,7 @@ Semua objek dunia memakai primitif greybox. Aset final masuk pada Sprint 5 (stor
 |---|---|---|---|---|
 | 1 | — | A1, A2, A3, A4, D1 | 22 | ✅ Selesai |
 | 2 | Alpha | G1, B1, B2, E3 | 23 | ✅ Selesai |
-| 3 | — | C1, C2, E4, E5, E6 | 23 | — |
+| 3 | — | C1, C2, E4, E5, E6 | 23 | ✅ Selesai |
 | 4 | Beta | C3, E1, E2, E7 | 24 | — |
 | 5 | — | F1, F2, G2 | 15 | — |
 | 6 | Release | G3 | 5 | — |
@@ -144,11 +146,22 @@ statis (E3).
 Jalankan ulang authoring level kapan saja lewat menu **Hypoxia > Build Sprint 2 Level**; objek
 `Sprint2_Level` lama dihapus lebih dulu sehingga build ulang tidak menggandakan geometri.
 
+**Sprint 3** — Teka-teki 1 dan 2 selesai; terrain, L-System, dan noise tampil (23 poin).
+
+| Story | Bukti |
+|---|---|
+| C1 | `ArchiveSafe_P1` di Laboratorium: Rian membaca glif di dinding (`ArchiveGlyph_Plaque`), Maya menerjemahkan via bagan unsur kimia (`[C]`), verifikasi kode `428` server-authoritative membuka brankas |
+| C2 | `Illusion_Entity_2` di ruang generator: menarik tuas benar memutar handle 45° dan membuka `Gate_Sector2` via verifikasi host; memilih manekin rusak/objek salah ditolak |
+| E4 | `Procedural_Terrain_Dermaga`: mesh grid berbukit dari `Mathf.PerlinNoise` dengan seed tetap, slider tinggi di panel debug `[F4]` |
+| E5 | `LSystem_Poros_Moss`: string rewriting L-System dengan preset `MossTendril` dan `WallCrack`, slider sudut & panjang cabang di panel debug `[F4]` |
+| E6 | Noise simulasi: `WaveGenerator` pada genangan air poros, `PerlinLightFlicker` lampu sodium darurat, `SimplexVaporMotion` kabut gas via `noise.snoise`, dan camera sway Perlin |
+
 ## Tes
 
 `Assets/Scripts/Exposure/ExposureCalculatorTests.cs`,
-`Assets/Scripts/Illusion/IllusionFormTests.cs`, dan
-`Assets/Scripts/Procedural/ProceduralSimulationTests.cs` berisi pemeriksaan berbasis `Debug.Assert` yang
+`Assets/Scripts/Illusion/IllusionFormTests.cs`,
+`Assets/Scripts/Procedural/ProceduralSimulationTests.cs`, dan
+`Assets/Scripts/Puzzles/PuzzleTests.cs` berisi pemeriksaan berbasis `Debug.Assert` yang
 dijalankan otomatis saat Editor dimuat (`[InitializeOnLoadMethod]`). Kegagalan tampil di
 Console. Tidak memakai framework tes tambahan.
 

@@ -14,7 +14,7 @@ namespace Hypoxia
 
         private NetworkObject networkObject;
 
-        public IllusionEntity Hovered { get; private set; }
+        public IInteractable Hovered { get; private set; }
 
         private void Awake()
         {
@@ -34,13 +34,13 @@ namespace Hypoxia
             Hovered = null;
             if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, reach))
             {
-                Hovered = hit.collider.GetComponentInParent<IllusionEntity>();
+                Hovered = hit.collider.GetComponentInParent<IInteractable>();
             }
 
             Keyboard kb = Keyboard.current;
             if (kb != null && kb.eKey.wasPressedThisFrame && Hovered != null)
             {
-                Hovered.RequestInteract();
+                Hovered.Interact();
             }
         }
     }

@@ -77,6 +77,47 @@ namespace Hypoxia.EditorTools
             Box(root, "Wall_Lab_E_Lintel", new Vector3(30f, 3.5f, 0f), new Vector3(0.5f, 1f, 2f), wall);
             Box(root, "Bench_Microscope", new Vector3(15f, 0.6f, 5f), new Vector3(3f, 1.2f, 1f), wall);
             Box(root, "Cabinet_Archive", new Vector3(24f, 1.2f, 6f), new Vector3(2f, 2.4f, 0.8f), wall);
+
+            // C1: P1 Brankas Arsip (Laboratorium) & Dinding Glif
+            BuildArchiveSafe(root, wall, new Vector3(24f, 1.2f, 5.2f));
+            BuildGlyphWall(root, wall, new Vector3(15f, 2f, 7.7f));
+        }
+
+        private static void BuildArchiveSafe(Transform root, Material wall, Vector3 pos)
+        {
+            GameObject safe = new GameObject("ArchiveSafe_P1");
+            safe.transform.SetParent(root, false);
+            safe.transform.position = pos;
+
+            Box(safe.transform, "SafeBody", Vector3.zero, new Vector3(1.2f, 1.2f, 1.0f), wall);
+            BoxCollider safeCol = safe.AddComponent<BoxCollider>();
+            safeCol.size = new Vector3(1.4f, 1.4f, 1.2f);
+            safeCol.center = Vector3.zero;
+
+            GameObject doorPivot = new GameObject("SafeDoorPivot");
+            doorPivot.transform.SetParent(safe.transform, false);
+            doorPivot.transform.localPosition = new Vector3(-0.55f, 0f, -0.5f);
+
+            GameObject doorPanel = Box(doorPivot.transform, "SafeDoorPanel", new Vector3(0.55f, 0f, 0f), new Vector3(1.1f, 1.1f, 0.1f), wall);
+            BoxCollider doorBlocker = doorPanel.GetComponent<BoxCollider>();
+
+            GameObject doc = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            doc.name = "Research_Document_C1";
+            doc.transform.SetParent(safe.transform, false);
+            doc.transform.localPosition = new Vector3(0f, 0f, 0.1f);
+            doc.transform.localScale = new Vector3(0.2f, 0.3f, 0.2f);
+            Object.DestroyImmediate(doc.GetComponent<Collider>());
+
+            safe.AddComponent<NetworkObject>();
+            ArchiveSafe archiveSafe = safe.AddComponent<ArchiveSafe>();
+            SetReference(archiveSafe, "doorTransform", doorPivot.transform);
+            SetReference(archiveSafe, "blockingCollider", doorBlocker);
+        }
+
+        private static void BuildGlyphWall(Transform root, Material wall, Vector3 pos)
+        {
+            GameObject plaque = Box(root, "ArchiveGlyph_Plaque", pos, new Vector3(3f, 1.5f, 0.15f), wall);
+            plaque.AddComponent<ArchiveGlyphWall>();
         }
 
         private static void BuildShaftAndStation(Transform root, Material wall)
@@ -180,11 +221,26 @@ namespace Hypoxia.EditorTools
                     Form(entity.transform, "Form_Hallucinating", new Vector3(0.6f, 2.4f, 0.6f), new Color(0.9f, 0.25f, 0.2f), wall)
                 };
 
+                GameObject handlePivot = null;
+                if (i == 1) // C2: Tuas benar memiliki handle pivot yang berotasi saat ditarik
+                {
+                    handlePivot = new GameObject("Lever_Handle_Pivot");
+                    handlePivot.transform.SetParent(entity.transform, false);
+                    handlePivot.transform.localPosition = new Vector3(0f, 0.8f, 0f);
+
+                    GameObject handleMesh = Box(handlePivot.transform, "HandleRod", new Vector3(0f, 0.4f, 0f), new Vector3(0.08f, 0.8f, 0.08f), wall);
+                    Object.DestroyImmediate(handleMesh.GetComponent<Collider>());
+                }
+
                 entity.AddComponent<NetworkObject>();
                 IllusionEntity illusion = entity.AddComponent<IllusionEntity>();
                 SetReferenceArray(illusion, "formsByBand", forms);
                 SetBool(illusion, "isCorrectChoice", i == 1);
                 SetReference(illusion, "gateToOpen", gate);
+                if (handlePivot != null)
+                {
+                    SetReference(illusion, "handleTransform", handlePivot.transform);
+                }
             }
         }
 
@@ -218,6 +274,7 @@ namespace Hypoxia.EditorTools
                 // Dynamic procedural/simulation objects, puzzle entities, and gates are non-static.
                 string n = child.name;
                 if (n.StartsWith("Illusion_") || n.StartsWith("Gate_") ||
+                    n.StartsWith("ArchiveSafe") || n.StartsWith("ArchiveGlyph") ||
                     n.Contains("Procedural_") || n.Contains("LSystem_") ||
                     n.Contains("Puddle_") || n.Contains("Vapor_") || n.Contains("Emergency_"))
                 {

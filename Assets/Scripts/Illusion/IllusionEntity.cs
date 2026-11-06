@@ -9,7 +9,7 @@ namespace Hypoxia
     /// Interaksi dikirim ke host dan diverifikasi pada objek asli (B2).
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class IllusionEntity : NetworkBehaviour
+    public sealed class IllusionEntity : NetworkBehaviour, IInteractable
     {
         [Tooltip("Wujud per band: 0 Normal, 1 Terdistorsi, 2 Halusinasi berat.")]
         [SerializeField] private GameObject[] formsByBand = new GameObject[3];
@@ -18,11 +18,31 @@ namespace Hypoxia
 
         [SerializeField] private GateController gateToOpen;
 
+        [SerializeField] private Transform handleTransform;
+
         public NetworkVariable<bool> IsSolved = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         private int appliedForm = -1;
 
         public bool IsCorrectChoice => isCorrectChoice;
+
+        public string InteractionPrompt
+        {
+            get
+            {
+                if (IsSolved.Value) return "Tuas [Sudah Ditarik]";
+                PlayerExposure local = PlayerExposure.LocalInstance;
+                float exposure = local != null ? local.CurrentExposure : 0f;
+                var band = ExposureCalculator.GetBand(exposure);
+                if (band == ExposureCalculator.ExposureBand.Hallucinating)
+                {
+                    return "[E] Tarik Patung Obor";
+                }
+                return isCorrectChoice ? "[E] Tarik Tuas Listrik" : "[E] Periksa Manekin Rusak";
+            }
+        }
+
+        public void Interact() => RequestInteract();
 
         public static int FormIndexForBand(ExposureCalculator.ExposureBand band, int formCount)
         {
@@ -34,6 +54,24 @@ namespace Hypoxia
         {
             appliedForm = -1;
             ApplyLocalForm();
+            IsSolved.OnValueChanged += OnSolvedChanged;
+            ApplyHandle(IsSolved.Value);
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            IsSolved.OnValueChanged -= OnSolvedChanged;
+        }
+
+        private void OnSolvedChanged(bool previous, bool current) => ApplyHandle(current);
+
+        private void ApplyHandle(bool solved)
+        {
+            // ponytail: rotasi tuas instan 45 derajat. Upgrade ke interpolasi halus jika diperlukan.
+            if (handleTransform != null)
+            {
+                handleTransform.localRotation = solved ? Quaternion.Euler(45f, 0f, 0f) : Quaternion.identity;
+            }
         }
 
         private void Update()

@@ -12,6 +12,7 @@ namespace Hypoxia
         private Color currentBarColor = new(0.2f, 0.85f, 0.4f);
         private Texture2D whiteTexture;
         private bool showDebugPanel = false;
+        private bool showChemicalChart = false;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void EnsureHUD()
@@ -46,6 +47,11 @@ namespace Hypoxia
             {
                 if (UnityEngine.InputSystem.Keyboard.current != null)
                 {
+                    if (UnityEngine.InputSystem.Keyboard.current.cKey.wasPressedThisFrame)
+                    {
+                        showChemicalChart = !showChemicalChart;
+                    }
+
                     if (UnityEngine.InputSystem.Keyboard.current.f4Key.wasPressedThisFrame)
                     {
                         showDebugPanel = !showDebugPanel;
@@ -95,6 +101,10 @@ namespace Hypoxia
                 DrawExposureBar(player);
                 DrawOxygenInventory(player);
                 DrawInteractionPrompt(player);
+                if (showChemicalChart && !player.IsRian)
+                {
+                    DrawChemicalChart(player);
+                }
             }
 
             if (PlayerExposure.IsAnyPlayerPassedOut())
@@ -196,7 +206,8 @@ namespace Hypoxia
             }
 
             string flashlightStr = player.IsFlashlightOn.Value ? "ON" : "OFF";
-            GUI.Label(new Rect(20, 56, 350, 25), $"{tankStr}  |  [Q] O2  |  [F] Senter: {flashlightStr}");
+            string chartHint = !player.IsRian ? "  |  [C] Bagan Kimia" : "";
+            GUI.Label(new Rect(20, 56, 450, 25), $"{tankStr}  |  [Q] O2  |  [F] Senter: {flashlightStr}{chartHint}");
             GUI.Label(new Rect(20, 78, 400, 20), "Debug: [F1] 0%  [F2] 50%  [F3] 75%  |  [F4] Panel Modul 2");
 
             if (showDebugPanel)
@@ -252,8 +263,27 @@ namespace Hypoxia
         {
             if (!player.TryGetComponent(out PlayerInteractor interactor) || interactor.Hovered == null) return;
 
-            string label = interactor.Hovered.IsSolved.Value ? "[E] Sudah dibuka" : "[E] Periksa";
-            GUI.Label(new Rect(Screen.width * 0.5f - 100f, Screen.height * 0.55f, 200f, 25f), label);
+            GUI.Label(new Rect(Screen.width * 0.5f - 150f, Screen.height * 0.55f, 300f, 25f), interactor.Hovered.InteractionPrompt);
+        }
+
+        private void DrawChemicalChart(PlayerExposure player)
+        {
+            float w = 340f;
+            float h = 185f;
+            float x = 20f;
+            float y = 110f;
+
+            Color oldColor = GUI.color;
+            GUI.color = new Color(0.08f, 0.08f, 0.12f, 0.95f);
+            GUI.DrawTexture(new Rect(x, y, w, h), whiteTexture);
+            GUI.color = oldColor;
+
+            GUI.Label(new Rect(x + 15, y + 10, w - 30, 25), "<b>BAGAN UNSUR KIMIA (MAYA)</b>");
+            GUI.Label(new Rect(x + 15, y + 38, w - 30, 20), "•  Glif α (Karbon Aktif)       = <b>4</b>");
+            GUI.Label(new Rect(x + 15, y + 62, w - 30, 20), "•  Glif σ (Oksigen Terikat)  = <b>2</b>");
+            GUI.Label(new Rect(x + 15, y + 86, w - 30, 20), "•  Glif λ (Gas Belerang)     = <b>8</b>");
+            GUI.Label(new Rect(x + 15, y + 112, w - 30, 40), "<color=#e0a020>Catatan: δ = 9 (memiliki garis tegak, jangan tertukar dengan σ yang melengkung).</color>");
+            GUI.Label(new Rect(x + 15, y + 155, w - 30, 20), "Tekan [C] untuk menutup");
         }
 
         private void DrawGameOverScreen(PlayerExposure player)
