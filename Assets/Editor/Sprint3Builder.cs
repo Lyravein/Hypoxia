@@ -5,18 +5,21 @@ using UnityEngine;
 
 namespace Hypoxia.EditorTools
 {
-    // Authoring pass for Sprint 2 (G1/B1/B2/E3). Adds objects to Hypoxia_Greybox.
-    public static class Sprint2Builder
+    // Authoring pass for Sprint 2 & 3 (G1/B1/B2/E3/C1/C2/E4/E5/E6). Adds objects to Hypoxia_Greybox.
+    public static class Sprint3Builder
     {
         private const string Root = "Hypoxia_Greybox";
         private const string LitMaterial = "Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat";
 
-        private const string LevelName = "Sprint2_Level";
+        private const string LevelName = "Sprint3_Level";
 
+        [MenuItem("Hypoxia/Build Sprint 3 Level")]
         [MenuItem("Hypoxia/Build Sprint 2 Level")]
         public static void Build()
         {
             Transform greybox = GameObject.Find(Root).transform;
+            Transform prev2 = greybox.Find("Sprint2_Level");
+            if (prev2 != null) Object.DestroyImmediate(prev2.gameObject);
             Transform previous = greybox.Find(LevelName);
             if (previous != null) Object.DestroyImmediate(previous.gameObject);
 
@@ -39,7 +42,7 @@ namespace Hypoxia.EditorTools
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
             EditorSceneManager.SaveOpenScenes();
-            Debug.Log("Sprint 2 level built.");
+            Debug.Log("Sprint 3 level built.");
         }
 
         private static void BuildDermaga(Transform root, Material wall)

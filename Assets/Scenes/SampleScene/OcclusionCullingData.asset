@@ -15,78 +15,78 @@ OcclusionCullingData:
     sizePortals: 0
     scene: 99c9720ab356a0642a771bea13969a05
   m_StaticRenderers:
-  - targetObject: 36518217
+  - targetObject: 1291466884
     targetPrefab: 0
-  - targetObject: 1367874344
+  - targetObject: 1159260593
     targetPrefab: 0
-  - targetObject: 87863013
+  - targetObject: 161174251
     targetPrefab: 0
-  - targetObject: 1529676723
+  - targetObject: 2138823020
     targetPrefab: 0
-  - targetObject: 105197614
+  - targetObject: 1953918933
     targetPrefab: 0
-  - targetObject: 1842616130
+  - targetObject: 422358081
     targetPrefab: 0
-  - targetObject: 1110045823
+  - targetObject: 728756824
     targetPrefab: 0
-  - targetObject: 1640472149
+  - targetObject: 481490571
     targetPrefab: 0
-  - targetObject: 486469784
+  - targetObject: 487458624
     targetPrefab: 0
-  - targetObject: 13611381
+  - targetObject: 419629019
     targetPrefab: 0
-  - targetObject: 1981548681
+  - targetObject: 834801430
     targetPrefab: 0
-  - targetObject: 381526916
+  - targetObject: 2000451954
     targetPrefab: 0
-  - targetObject: 2040416629
+  - targetObject: 2071238792
     targetPrefab: 0
-  - targetObject: 330705588
+  - targetObject: 25761784
     targetPrefab: 0
-  - targetObject: 853789783
+  - targetObject: 963457240
     targetPrefab: 0
-  - targetObject: 553530025
+  - targetObject: 93941190
     targetPrefab: 0
-  - targetObject: 173555794
+  - targetObject: 871640829
     targetPrefab: 0
-  - targetObject: 642783090
+  - targetObject: 295723327
     targetPrefab: 0
-  - targetObject: 866466977
+  - targetObject: 746267638
     targetPrefab: 0
-  - targetObject: 1381157742
+  - targetObject: 1007310840
     targetPrefab: 0
-  - targetObject: 1684741759
+  - targetObject: 412130892
     targetPrefab: 0
-  - targetObject: 1154667473
+  - targetObject: 1076006704
     targetPrefab: 0
-  - targetObject: 1303006033
+  - targetObject: 745466703
     targetPrefab: 0
-  - targetObject: 505418175
+  - targetObject: 69659033
     targetPrefab: 0
-  - targetObject: 2004548726
+  - targetObject: 1865874309
     targetPrefab: 0
-  - targetObject: 859261143
+  - targetObject: 23964097
     targetPrefab: 0
-  - targetObject: 307765288
+  - targetObject: 552669742
     targetPrefab: 0
-  - targetObject: 1320481000
+  - targetObject: 291456136
     targetPrefab: 0
-  - targetObject: 1706531461
+  - targetObject: 1889928251
     targetPrefab: 0
-  - targetObject: 541032945
+  - targetObject: 432343900
     targetPrefab: 0
-  - targetObject: 1639710759
+  - targetObject: 469613971
     targetPrefab: 0
-  - targetObject: 570055449
+  - targetObject: 1387280742
     targetPrefab: 0
-  - targetObject: 193792321
+  - targetObject: 945231615
     targetPrefab: 0
-  - targetObject: 409804355
+  - targetObject: 502102236
     targetPrefab: 0
-  - targetObject: 245589796
+  - targetObject: 1014397681
     targetPrefab: 0
-  - targetObject: 534974165
+  - targetObject: 1050786055
     targetPrefab: 0
-  - targetObject: 2135489649
+  - targetObject: 1845404235
     targetPrefab: 0
   m_Portals: []

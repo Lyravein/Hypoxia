@@ -99,7 +99,7 @@ dan **75%**, supaya kepanikan terasa organik.
 Assets/
 ├── Prefabs/Player.prefab          Player prefab jaringan (NetworkObject + NetworkTransform)
 ├── Scenes/SampleScene.unity       Scene gameplay; root Hypoxia_Network + Hypoxia_Greybox
-├── Editor/Sprint2Builder.cs       Menu Hypoxia > Build Sprint 2 Level (authoring greybox)
+├── Editor/Sprint3Builder.cs       Menu Hypoxia > Build Sprint 3 Level (authoring greybox)
 ├── Scripts/
 │   ├── Exposure/                  ExposureCalculator, PlayerExposure, ExposureZone, tes
 │   ├── Illusion/                  IllusionEntity (B1/B2), GateController, PlayerInteractor, IInteractable, tes
@@ -143,8 +143,8 @@ statis (E3).
 | B2 | `RequestInteractRpc` ke host; memilih objek salah tidak membuka gerbang, objek benar membuka `Gate_Sector2` |
 | E3 | 45 dari 49 transform bertanda Static + ter-bake; kamera di stasiun: 60 draw call / 2.903 tris dengan occlusion, 66 / 3.351 tanpanya |
 
-Jalankan ulang authoring level kapan saja lewat menu **Hypoxia > Build Sprint 2 Level**; objek
-`Sprint2_Level` lama dihapus lebih dulu sehingga build ulang tidak menggandakan geometri.
+Jalankan ulang authoring level kapan saja lewat menu **Hypoxia > Build Sprint 3 Level**; objek
+`Sprint3_Level` (atau `Sprint2_Level` lama) dihapus lebih dulu sehingga build ulang tidak menggandakan geometri.
 
 **Sprint 3** — Teka-teki 1 dan 2 selesai; terrain, L-System, dan noise tampil (23 poin).
 
