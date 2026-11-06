@@ -16,6 +16,8 @@ namespace Hypoxia
         [SerializeField] private float sprintSpeed = 8f; // GDD A1: sprint rate >= 2x walk rate
         [SerializeField] private float mouseSensitivity = 2f;
         [SerializeField] private float gravity = -20f;
+        [SerializeField] private float swayFrequency = 2.5f;
+        [SerializeField] private float swayAmplitude = 0.04f;
 
         private CharacterController controller;
         private NetworkObject networkObject;
@@ -101,7 +103,20 @@ namespace Hypoxia
             if (targetCamera != null)
             {
                 cameraPitch = Mathf.Clamp(cameraPitch - delta.y, -80f, 80f);
-                targetCamera.transform.localRotation = Quaternion.Euler(cameraPitch, 0f, 0f);
+
+                // E6: Camera sway prosedural berbasis Mathf.PerlinNoise saat bergerak (Modul 5)
+                float swayZ = 0f;
+                float swayY = 0f;
+                if (IsMoving)
+                {
+                    float speedFactor = IsSprinting ? 1.6f : 1.0f;
+                    float t = Time.time * swayFrequency * speedFactor;
+                    swayZ = (Mathf.PerlinNoise(t, 0f) - 0.5f) * swayAmplitude * 25f;
+                    swayY = (Mathf.PerlinNoise(0f, t) - 0.5f) * swayAmplitude;
+                }
+
+                targetCamera.transform.localRotation = Quaternion.Euler(cameraPitch, 0f, swayZ);
+                targetCamera.transform.localPosition = new Vector3(0f, 1.6f + swayY, 0f);
             }
         }
 

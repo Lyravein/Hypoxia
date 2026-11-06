@@ -62,6 +62,7 @@ gagal, firewall host memblokir UDP 7777 (`sudo ufw allow 7777/udp`).
 | Senter | `F` |
 | Interaksi / periksa objek | `E` |
 | Debug band CO (build demo saja) | `F1` `F2` `F3` |
+| Buka/tutup Panel Modul 2 & 5 | `F4` |
 | Buka/tutup kunci kursor | `Esc` |
 
 ## Mekanik Paparan CO
@@ -101,8 +102,10 @@ Assets/
 ├── Scripts/
 │   ├── Exposure/                  ExposureCalculator, PlayerExposure, ExposureZone, tes
 │   ├── Illusion/                  IllusionEntity (B1/B2), GateController, PlayerInteractor, tes
-│   ├── UI/HypoxiaHUD.cs           HUD IMGUI: menu LAN, bilah paparan, prompt interaksi, game over
-│   └── OwnerPlayerMovement.cs     Gerak owner-authoritative
+│   ├── Procedural/                ProceduralTerrain (E4), LSystemGenerator (E5), tes
+│   ├── Simulation/                WaveGenerator (E6), PerlinLightFlicker (E6), SimplexVaporMotion (E6)
+│   ├── UI/HypoxiaHUD.cs           HUD IMGUI: menu LAN, bilah paparan, prompt interaksi, panel debug F4
+│   └── OwnerPlayerMovement.cs     Gerak owner-authoritative + camera sway Perlin
 └── DefaultNetworkPrefabs.asset    Daftar prefab jaringan
 
 Packages/manifest.json             Dependensi UPM
@@ -143,8 +146,9 @@ Jalankan ulang authoring level kapan saja lewat menu **Hypoxia > Build Sprint 2 
 
 ## Tes
 
-`Assets/Scripts/Exposure/ExposureCalculatorTests.cs` dan
-`Assets/Scripts/Illusion/IllusionFormTests.cs` berisi pemeriksaan berbasis `Debug.Assert` yang
+`Assets/Scripts/Exposure/ExposureCalculatorTests.cs`,
+`Assets/Scripts/Illusion/IllusionFormTests.cs`, dan
+`Assets/Scripts/Procedural/ProceduralSimulationTests.cs` berisi pemeriksaan berbasis `Debug.Assert` yang
 dijalankan otomatis saat Editor dimuat (`[InitializeOnLoadMethod]`). Kegagalan tampil di
 Console. Tidak memakai framework tes tambahan.
 

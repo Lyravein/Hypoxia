@@ -48,6 +48,16 @@ namespace Hypoxia.EditorTools
             // zone keeps covering it and exposure only starts once the player enters the lab.
             Box(root, "Ground_Dermaga", new Vector3(0f, 0f, 0f), new Vector3(16f, 0.5f, 16f), wall);
 
+            // E4: Procedural Terrain Dermaga berbasis Perlin Noise (Modul 2)
+            GameObject terrainObj = new GameObject("Procedural_Terrain_Dermaga");
+            terrainObj.transform.SetParent(root, false);
+            terrainObj.transform.position = new Vector3(-18f, 0f, 0f);
+            terrainObj.AddComponent<MeshFilter>();
+            MeshRenderer terrainRend = terrainObj.AddComponent<MeshRenderer>();
+            terrainRend.sharedMaterial = wall;
+            terrainObj.AddComponent<MeshCollider>();
+            terrainObj.AddComponent<ProceduralTerrain>();
+
             GameObject openAir = GameObject.Find("Zone_OpenAir");
             if (openAir != null)
             {
@@ -78,6 +88,45 @@ namespace Hypoxia.EditorTools
             Box(root, "Pillar_Shaft_1", new Vector3(40f, 2f, 1.5f), new Vector3(0.6f, 4f, 0.6f), wall);
             Box(root, "Pillar_Shaft_2", new Vector3(44f, 2f, -1.5f), new Vector3(0.6f, 4f, 0.6f), wall);
             Box(root, "Rail_Cart", new Vector3(48f, 0.6f, 0f), new Vector3(2.4f, 1f, 1.4f), wall);
+
+            // E5: L-System sulur lumut & retakan pada dinding poros tambang (Modul 2)
+            GameObject lsystemObj = new GameObject("LSystem_Poros_Moss");
+            lsystemObj.transform.SetParent(root, false);
+            lsystemObj.transform.position = new Vector3(42f, 0.5f, 2.7f);
+            lsystemObj.AddComponent<MeshFilter>();
+            MeshRenderer lsystemRend = lsystemObj.AddComponent<MeshRenderer>();
+            lsystemRend.sharedMaterial = wall;
+            lsystemObj.AddComponent<LSystemGenerator>();
+
+            // E6: Permukaan genangan air bergelombang dinamis (WaveGenerator)
+            GameObject puddleObj = new GameObject("Puddle_Shaft_Water");
+            puddleObj.transform.SetParent(root, false);
+            puddleObj.transform.position = new Vector3(38f, 0.26f, 0f);
+            puddleObj.AddComponent<MeshFilter>();
+            MeshRenderer puddleRend = puddleObj.AddComponent<MeshRenderer>();
+            puddleRend.sharedMaterial = wall;
+            puddleObj.AddComponent<WaveGenerator>();
+
+            // E6: Lampu darurat berkedip organik (PerlinLightFlicker)
+            GameObject flickLightObj = new GameObject("Emergency_Flicker_Light");
+            flickLightObj.transform.SetParent(root, false);
+            flickLightObj.transform.position = new Vector3(44f, 3.5f, 0f);
+            Light fLight = flickLightObj.AddComponent<Light>();
+            fLight.type = LightType.Point;
+            fLight.color = new Color(1f, 0.35f, 0.15f); // Warna sodium darurat
+            fLight.range = 10f;
+            fLight.intensity = 2.5f;
+            flickLightObj.AddComponent<PerlinLightFlicker>();
+
+            // E6: Simplex kabut uap gas racun dinamis di lorong poros (SimplexVaporMotion)
+            GameObject vaporObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            vaporObj.name = "Vapor_Pocket_Gas";
+            vaporObj.transform.SetParent(root, false);
+            vaporObj.transform.position = new Vector3(46f, 1.2f, 0f);
+            vaporObj.transform.localScale = new Vector3(2f, 1.5f, 2f);
+            Object.DestroyImmediate(vaporObj.GetComponent<Collider>());
+            if (wall != null) vaporObj.GetComponent<Renderer>().sharedMaterial = wall;
+            vaporObj.AddComponent<SimplexVaporMotion>();
 
             Box(root, "Ground_Station", new Vector3(66f, 0f, 0f), new Vector3(12f, 0.5f, 12f), wall);
             Box(root, "Ceiling_Station", new Vector3(66f, 5f, 0f), new Vector3(12f, 0.5f, 12f), wall);
@@ -166,8 +215,14 @@ namespace Hypoxia.EditorTools
         {
             foreach (Transform child in root.GetComponentsInChildren<Transform>(true))
             {
-                // Puzzle entities and gates move or swap visuals at runtime.
-                if (child.name.StartsWith("Illusion_") || child.name.StartsWith("Gate_")) continue;
+                // Dynamic procedural/simulation objects, puzzle entities, and gates are non-static.
+                string n = child.name;
+                if (n.StartsWith("Illusion_") || n.StartsWith("Gate_") ||
+                    n.Contains("Procedural_") || n.Contains("LSystem_") ||
+                    n.Contains("Puddle_") || n.Contains("Vapor_") || n.Contains("Emergency_"))
+                {
+                    continue;
+                }
 
                 GameObjectUtility.SetStaticEditorFlags(child.gameObject,
                     StaticEditorFlags.OccluderStatic |

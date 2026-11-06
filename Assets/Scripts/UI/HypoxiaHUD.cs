@@ -11,6 +11,7 @@ namespace Hypoxia
         private ushort port = 7777;
         private Color currentBarColor = new(0.2f, 0.85f, 0.4f);
         private Texture2D whiteTexture;
+        private bool showDebugPanel = false;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void EnsureHUD()
@@ -43,12 +44,26 @@ namespace Hypoxia
 
             if (isInGame)
             {
-                if (UnityEngine.InputSystem.Keyboard.current != null && UnityEngine.InputSystem.Keyboard.current.escapeKey.wasPressedThisFrame)
+                if (UnityEngine.InputSystem.Keyboard.current != null)
                 {
-                    Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
-                    Cursor.visible = Cursor.lockState != CursorLockMode.Locked;
+                    if (UnityEngine.InputSystem.Keyboard.current.f4Key.wasPressedThisFrame)
+                    {
+                        showDebugPanel = !showDebugPanel;
+                        if (showDebugPanel)
+                        {
+                            Cursor.lockState = CursorLockMode.None;
+                            Cursor.visible = true;
+                        }
+                    }
+
+                    if (UnityEngine.InputSystem.Keyboard.current.escapeKey.wasPressedThisFrame)
+                    {
+                        Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
+                        Cursor.visible = Cursor.lockState != CursorLockMode.Locked;
+                    }
                 }
-                else if (UnityEngine.InputSystem.Mouse.current != null && UnityEngine.InputSystem.Mouse.current.leftButton.wasPressedThisFrame && Cursor.lockState != CursorLockMode.Locked)
+
+                if (UnityEngine.InputSystem.Mouse.current != null && UnityEngine.InputSystem.Mouse.current.leftButton.wasPressedThisFrame && Cursor.lockState != CursorLockMode.Locked && !showDebugPanel)
                 {
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
@@ -182,7 +197,55 @@ namespace Hypoxia
 
             string flashlightStr = player.IsFlashlightOn.Value ? "ON" : "OFF";
             GUI.Label(new Rect(20, 56, 350, 25), $"{tankStr}  |  [Q] O2  |  [F] Senter: {flashlightStr}");
-            GUI.Label(new Rect(20, 78, 300, 20), "Debug Demo: [F1] 0%  [F2] 50%  [F3] 75%");
+            GUI.Label(new Rect(20, 78, 400, 20), "Debug: [F1] 0%  [F2] 50%  [F3] 75%  |  [F4] Panel Modul 2");
+
+            if (showDebugPanel)
+            {
+                DrawProceduralDebugPanel();
+            }
+        }
+
+        private void DrawProceduralDebugPanel()
+        {
+            float panelWidth = 320f;
+            float panelHeight = 220f;
+            float x = Screen.width - panelWidth - 20f;
+            float y = 45f;
+
+            Color oldColor = GUI.color;
+            GUI.color = new Color(0.08f, 0.08f, 0.1f, 0.9f);
+            GUI.DrawTexture(new Rect(x, y, panelWidth, panelHeight), whiteTexture);
+            GUI.color = oldColor;
+
+            GUI.Label(new Rect(x + 15, y + 10, panelWidth - 30, 25), "<b>Panel Debug Modul 2 & 5</b>");
+
+            // Slider Terrain (E4)
+            ProceduralTerrain terrain = FindAnyObjectByType<ProceduralTerrain>();
+            if (terrain != null)
+            {
+                GUI.Label(new Rect(x + 15, y + 40, panelWidth - 30, 20), $"Tinggi Terrain Dermaga: {terrain.HeightMultiplier:F2}");
+                float newH = GUI.HorizontalSlider(new Rect(x + 15, y + 62, panelWidth - 30, 20), terrain.HeightMultiplier, 0f, 6f);
+                if (!Mathf.Approximately(newH, terrain.HeightMultiplier)) terrain.HeightMultiplier = newH;
+            }
+
+            // Slider L-System (E5)
+            LSystemGenerator lsystem = FindAnyObjectByType<LSystemGenerator>();
+            if (lsystem != null)
+            {
+                GUI.Label(new Rect(x + 15, y + 90, panelWidth - 30, 20), $"Sudut Cabang L-System: {lsystem.BranchAngle:F0}°");
+                float newAngle = GUI.HorizontalSlider(new Rect(x + 15, y + 112, panelWidth - 30, 20), lsystem.BranchAngle, 10f, 50f);
+                if (!Mathf.Approximately(newAngle, lsystem.BranchAngle)) lsystem.BranchAngle = newAngle;
+
+                GUI.Label(new Rect(x + 15, y + 138, panelWidth - 30, 20), $"Panjang Cabang L-System: {lsystem.BranchLength:F2}m");
+                float newLen = GUI.HorizontalSlider(new Rect(x + 15, y + 160, panelWidth - 30, 20), lsystem.BranchLength, 0.3f, 1.8f);
+                if (!Mathf.Approximately(newLen, lsystem.BranchLength)) lsystem.BranchLength = newLen;
+
+                string nextPresetLabel = lsystem.Preset == LSystemRulePreset.MossTendril ? "Switch: Wall Crack" : "Switch: Moss Tendril";
+                if (GUI.Button(new Rect(x + 15, y + 185, panelWidth - 30, 25), nextPresetLabel))
+                {
+                    lsystem.Preset = lsystem.Preset == LSystemRulePreset.MossTendril ? LSystemRulePreset.WallCrack : LSystemRulePreset.MossTendril;
+                }
+            }
         }
 
         private void DrawInteractionPrompt(PlayerExposure player)
